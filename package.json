@@ -1,0 +1,23 @@
+{
+  "name": "note-javescript",
+  "version": "1.0.0",
+  "description": "note for javascript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liny93/note-javescript.git"
+  },
+  "author": "liny",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/liny93/note-javescript/issues"
+  },
+  "homepage": "https://github.com/liny93/note-javescript#readme",
+  "dependencies": {
+    "bluebird": "^3.7.2",
+    "fast-json-stringify": "^1.15.7"
+  }
+}
