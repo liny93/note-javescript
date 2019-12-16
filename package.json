@@ -18,6 +18,9 @@
   "homepage": "https://github.com/liny93/note-javescript#readme",
   "dependencies": {
     "bluebird": "^3.7.2",
-    "fast-json-stringify": "^1.15.7"
+    "express": "^4.17.1",
+    "fast-json-stringify": "^1.15.7",
+    "immutable": "^4.0.0-rc.12",
+    "lodash": "^4.17.15"
   }
 }

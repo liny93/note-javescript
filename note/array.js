@@ -1,0 +1,8 @@
+/**
+ * array function
+ */
+
+const info = {
+
+}
+
