@@ -9,7 +9,7 @@
  * @return {number[]}
  */
 
-
+// 我的答案
 var findSubstring = function (s, words) {
     const wordLength = words[0].length
     const sortWordString = words.sort().join('')
