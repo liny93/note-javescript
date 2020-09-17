@@ -1,0 +1,12 @@
+{
+    "name": "测试接口文档",
+    "version": "0.0.1",
+    "description": "文档总描述",
+    "title": "自定义标题",
+    "url": "http：//localhost:3300/api",
+    "sampleUrl": "http://127.0.0.1:3300/api",
+    "template": {
+        "withCompare": true,
+        "withGenerator": true
+    }
+}
