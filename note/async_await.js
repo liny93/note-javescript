@@ -1,11 +1,10 @@
-test1()
 /**
- * for await of (ES9) => test1
+ * for await of (ES9) => test
  * 等待成员状态改变后遍历下一个成员
  * 
  * 
  */
-async function test1() {
+async function test() {
     function gen(time) {
         return new Promise((resolve, reject) => {
             setTimeout(() => resolve(time), time)
@@ -18,3 +17,5 @@ async function test1() {
         console.log(Date.now(), item);
     }
 }
+
+test()
