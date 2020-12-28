@@ -1,8 +1,9 @@
-export default class LinkedList {
+
+export class LinkedList {
     private size: number = 0
-    private first: Node = null
-    private last: Node = null
-    public [Symbol.iterator]: any = this.iterator
+    private first: Node = null;
+    private last: Node = null;
+    [Symbol.iterator]: any = this.iterator
 
     constructor(array?: any[]) {
         if (array) this.addAll(array, this.size)
@@ -45,30 +46,6 @@ export default class LinkedList {
             this.first = n
         } else {
             l.next = n
-        }
-        return ++this.size
-    }
-
-    private linkBefore(value: any, succ: Node) {
-        const pred = succ.prev
-        const n = new Node(pred, value, succ)
-        succ.prev = n
-        if (pred === null) {
-            this.first = n
-        } else {
-            pred.next = n
-        }
-        return ++this.size
-    }
-
-    private linkAfter(value: any, succ: Node) {
-        const next = succ.next
-        const n = new Node(succ, value, next)
-        succ.next = n
-        if (next === null) {
-            this.last = n
-        } else {
-            next.prev = n
         }
         return ++this.size
     }
@@ -126,38 +103,44 @@ export default class LinkedList {
     }
 
     public getFirst() {
-        const f = this.first
-        if (f === null) throw new NoSuchElementException()
-        return f.item
+        return this.first?.item
     }
 
     public getLast() {
-        const l = this.last
-        if (l === null) throw new NoSuchElementException()
-        return l.item
+        return this.last?.item
     }
 
-    public removeFirst() {
+    public shift() {
         const f = this.first
-        if (f === null) throw new NoSuchElementException()
-        this.unlinkFirst()
+        if (f !== null) {
+            this.unlinkFirst()
+        }
+        return this.size
     }
 
-    public removeLast() {
+    public pop() {
         const l = this.last
-        if (l === null) throw new NoSuchElementException()
-        this.unlinkLast()
+        if (l !== null) {
+            this.unlinkLast()
+        }
+        return this.size
     }
 
-    public addFirst(value: any) {
+    public unshift(value: any) {
         this.linkFirst(value)
+        return this.size
     }
 
-    public addLast(value: any) {
-        this.linkLast(value)
+    public push(...value) {
+        if (value.length === 1) {
+            this.linkLast(value[0])
+        } else {
+            this.addAll(value)
+        }
+        return this.size
     }
 
-    public contains(value: any) {
+    public includes(value: any) {
         return this.indexOf(value) !== -1
     }
 
@@ -172,17 +155,16 @@ export default class LinkedList {
     }
 
     public add(value: any, index?: number) {
-        if (index && +index > 0 && index < this.size) {
+        if (index && +index > 0 && +index < this.size) {
             this.addBefore(value, this.node(index))
         } else {
-            this.addLast(value)
+            this.push(value)
         }
     }
 
     public remove(value: any) {
-        if (value === undefined) {
-            this.removeFirst()
-            return
+        if (arguments.length === 0) {
+            throw new TypeError(`The "value" argument cannot be empty`)
         }
 
         for (let x = this.first; x !== null; x = x.next) {
@@ -207,23 +189,22 @@ export default class LinkedList {
     }
 
     public get(index: number) {
-        if (!index || (+index < 0 && index > this.size)) throw new NoSuchElementException()
+        if (!Number.isInteger(index) || (index < 0 && index > this.size)) return undefined
 
         return this.node(index).item
     }
 
-    public set(index: number, value: any) {
-        if (!index || (+index < 0 && index > this.size)) throw new NoSuchElementException()
-
+    public set(value: any, index: number) {
+        if (!Number.isInteger(index)) throw new TypeError(`The "index" argument must be of type integer`)
+        if (index < 0 && index > this.size) throw new TypeError(`The "index" argument must be a valid index`)
         const x = this.node(index)
         const oldVal = x.item
         x.item = value
         return oldVal
     }
 
-
     public addAll(array: any[], index?: number) {
-        if (index === undefined || index > this.size || index < 0) index = this.size
+        if (!Number.isInteger(index) || index > this.size || index < 0) index = this.size
 
         const numNew = array.length
         if (numNew === 0) return false
@@ -259,20 +240,6 @@ export default class LinkedList {
         this.size += numNew
         return true
     }
-
-
-
-    // private addLast(value: any) {
-    //     const l = this.last
-    //     const newNode = new Node(l, value, null)
-    //     this.last = newNode
-    //     if (l == null) {
-    //         this.first = newNode
-    //     } else {
-    //         l.next = newNode
-    //     }
-    //     this.size++
-    // }
 
     private addBefore(value: any, succ: Node) {
         const pred = succ.prev
@@ -311,7 +278,7 @@ export default class LinkedList {
     }
 }
 
-class Node {
+export class Node {
     item: any
     next: Node
     prev: Node
@@ -320,11 +287,5 @@ class Node {
         this.item = item
         this.next = next
         this.prev = prev
-    }
-}
-
-class NoSuchElementException extends Error {
-    constructor() {
-        super()
     }
 }
