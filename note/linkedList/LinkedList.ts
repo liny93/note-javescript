@@ -1,4 +1,7 @@
 
+/**
+ * 仿造java Linkedlist
+ */
 export class LinkedList {
     private size: number = 0
     private first: Node = null;
