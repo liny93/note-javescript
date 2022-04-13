@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.js"></script>
+
+    <title>简单图表生成</title>
+    <style>
+        #chart {
+            width: 1920px;
+            height: 800px;
+        }
+
+        .upload-demo {
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <el-select v-model="chartType" placeholder="图表类型">
+            <el-option v-for="item in chartTypes" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
+        </el-select>
+        <el-button type="primary" @click="showDemoData">示例数据</el-button>
+        <el-upload class="upload-demo" action="#" :on-change="handleChange" :show-file-list="false"
+            :file-list="fileList" :auto-upload="false">
+            <el-button type="primary">点击上传</el-button>
+        </el-upload>
+        <el-button type="primary" @click="createChart">生成图表</el-button>
+        <div id="chart"></div>
+        <el-dialog title="示例" :visible.sync="dialogVisible" width="60%">
+            <pre>{{demoData}}</pre>
+        </el-dialog>
+    </div>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                message: 'Hello Vue!',
+                myChart: null,
+                dialogVisible: false,
+                demoData: '',
+                chartType: '',
+                chartData: '',
+                chartTypes: [
+                    {
+                        value: 'line',
+                        label: '折线图'
+                    },
+                    {
+                        value: 'bar',
+                        label: '柱状图'
+                    },
+                    {
+                        value: 'pie',
+                        label: '饼图'
+                    }
+                ],
+                fileList: []
+            },
+            methods: {
+                showDemoData() {
+                    const type = this.chartType
+                    if (!type) return
+                    if (type === 'line' || type == 'bar' || type === 'pie') {
+                        this.demoData = [
+                            {
+                                key: '',
+                                value: ''
+                            }
+                        ]
+                    }
+                    this.dialogVisible = true
+                },
+                handleChange(file, fileList) {
+                    const reader = new FileReader()
+                    reader.onload = () => {
+                        if (reader.result) {
+                            this.chartData = reader.result
+                        }
+                    }
+                    reader.readAsText(file.raw, 'utf-8')
+                },
+                createChart(data) {
+                    try {
+                        if (!this.chartType) return
+                        const type = this.chartType
+                        const chartData = JSON.parse(this.chartData)
+
+                        if (type === 'line' || type === 'bar') {
+                            const keys = chartData.map(val => val.key)
+                            const values = chartData.map(val => val.value)
+                            const option = {
+                                xAxis: {
+                                    type: 'category',
+                                    data: keys
+                                },
+                                yAxis: {
+                                    type: 'value'
+                                },
+                                series: [
+                                    {
+                                        data: values,
+                                        type: type,
+                                    }
+                                ]
+                            }
+                            this.myChart.setOption(option);
+                        }
+
+                        if (type === 'pie') {
+                            const pieData = chartData.map(val => {
+                                return { value: val.value, name: val.key }
+                            })
+
+                            option = {
+                                tooltip: {
+                                    trigger: 'item'
+                                },
+                                legend: {
+                                    orient: 'vertical',
+                                    left: 'left'
+                                },
+                                series: [
+                                    {
+                                        type: 'pie',
+                                        radius: '50%',
+                                        data: pieData
+                                    }
+                                ]
+                            };
+                            this.myChart.setOption(option);
+                        }
+                    } catch {
+                        this.$message('无效数据')
+                    }
+                }
+            },
+            mounted() {
+                this.myChart = echarts.init(document.getElementById('chart'));
+            }
+        })
+    </script>
+</body>
+
+</html>
