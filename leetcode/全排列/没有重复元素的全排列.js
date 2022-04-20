@@ -10,7 +10,6 @@ function permute(nums) {
     }
 
     function add(newNums, index, resNums) {
-
         resNums.push(newNums[index])
         newNums.splice(index, 1)
         if (newNums.length === 0) {
@@ -28,3 +27,25 @@ function permute(nums) {
 function permute2(nums) {
 
 }
+
+// 答案
+var permute3 = function (nums) {
+    let res = [], path = []
+    const bt = (n, k, used) => {
+        if (k == path.length) {
+            res.push(Array.from(path))
+            return
+        }
+
+        for (let i = 0; i < k; i++) {
+            if (used[i]) continue
+            used[i] = true
+            path.push(n[i])
+            bt(n, k, used)
+            path.pop()
+            used[i] = false
+        }
+    }
+    bt(nums, nums.length, [])
+    return res
+};
