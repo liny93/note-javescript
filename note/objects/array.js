@@ -1,8 +1,0 @@
-/**
- * array function
- */
-
-const info = {
-
-}
-
